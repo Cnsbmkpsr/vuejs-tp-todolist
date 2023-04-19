@@ -1,50 +1,59 @@
 // src/store.ts
-import { reactive } from 'vue'
-import { Todo, Responsible } from './types'
+import { defineStore } from 'pinia'
 
-export const state = reactive({
-  todos: [] as Todo[],
-  responsables: [
-    {
-      id: '1',
-      name: 'Billy'
+interface Todo {
+  id: string
+  title: string
+  estimatedHours: number
+  responsible: Responsible
+  completed: boolean
+}
+
+interface Responsible {
+  id: string
+  name: string
+}
+
+export const useTodoStore = defineStore('todos', {
+  state: () => ({
+    todos: [] as Todo[],
+    responsables: [
+      {
+        id: '1',
+        name: 'Billy'
+      }
+    ] as Responsible[],
+    filter: 'all' as 'all' | 'selected' | 'unselected'
+  }),
+  getters: {
+    filteredTodos() {
+      if (this.filter === 'all') {
+        return this.todos
+      } else if (this.filter === 'selected') {
+        return this.todos.filter((todo) => todo.completed)
+      } else {
+        return this.todos.filter((todo) => !todo.completed)
+      }
+    },
+    selectedTodos() {
+      return this.todos.filter((todo) => todo.completed)
     }
-  ] as Responsible[],
-  filter: 'all'
+  },
+  actions: {
+    addTodo(todo: Todo) {
+      this.todos.push(todo)
+    },
+    updateTodo(todo: Todo) {
+      const index = this.todos.findIndex((t) => t.id === todo.id)
+      if (index !== -1) {
+        this.todos[index] = todo
+      }
+    },
+    deleteTodo(todoId: string) {
+      this.todos = this.todos.filter((todo) => todo.id !== todoId)
+    },
+    setFilter(filter: 'all' | 'selected' | 'unselected') {
+      this.filter = filter
+    }
+  }
 })
-
-export const addTodo = (todo: Todo) => {
-  state.todos.push(todo)
-}
-
-export const canAssignTask = (responsible: Responsible, estimatedHours: number): boolean => {
-  const tasks = state.todos.filter((todo) => todo.responsible.id === responsible.id)
-  if (tasks.length >= 3) {
-    return false
-  }
-
-  const totalHours = tasks.reduce((total, task) => total + task.estimatedHours, 0)
-  return totalHours + estimatedHours <= 10
-}
-
-export const updateTodo = (todo: Todo) => {
-  const index = state.todos.findIndex((t) => t.id === todo.id)
-  if (index !== -1) {
-    state.todos[index] = todo
-  }
-}
-
-export const deleteTodo = (todoId: string) => {
-  state.todos = state.todos.filter((todo) => todo.id !== todoId)
-}
-
-export const useStore = () => {
-  return {
-    todos: state.todos,
-    responsables: state.responsables,
-    filter: state.filter,
-    addTodo,
-    updateTodo,
-    deleteTodo
-  }
-}

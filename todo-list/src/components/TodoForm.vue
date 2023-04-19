@@ -14,9 +14,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStore } from '../store'
+import { useTodoStore } from '../store'
 
-const store = useStore()
+const store = useTodoStore()
 
 const title = ref('')
 const estimatedHours = ref('')

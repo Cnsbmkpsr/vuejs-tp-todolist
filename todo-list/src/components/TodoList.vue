@@ -18,12 +18,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from '../store'
+import { useTodoStore } from '../store'
 import TodoForm from './TodoForm.vue'
 import TodoCounter from './TodoCounter.vue'
 import TodoFilter from './TodoFilter.vue'
 
-const store = useStore()
+const store = useTodoStore()
 
 const filteredTodos = computed(() => {
   switch (store.filter) {
@@ -38,7 +38,6 @@ const filteredTodos = computed(() => {
   }
 })
 
-// Enregistrement des composants ici
 import { defineExpose } from 'vue'
 defineExpose({ components: { TodoForm, TodoCounter, TodoFilter } })
 </script>
