@@ -1,22 +1,22 @@
+<!-- src/components/TodoItem.vue -->
 <template>
-  <li>
-    <input v-model="todo.title" @blur="updateTodo" />
-    <button @click="deleteTodo">Supprimer</button>
-  </li>
+  <div>
+    <input type="checkbox" v-model="todo.completed" @change="updateTodo" />
+    {{ todo.title }} - {{ todo.estimatedHours }} heures - {{ todo.responsible.name }}
+  </div>
 </template>
 
 <script setup lang="ts">
-import { useStore } from '../store'
+import { defineProps, defineEmit } from 'vue'
 import { Todo } from '../types'
 
-const store = useStore()
-const props = defineProps<{ todo: Todo }>()
+const props = defineProps<{
+  todo: Todo
+}>()
+
+const emit = defineEmit(['update-todo'])
 
 const updateTodo = () => {
-  // Mettre à jour la tâche dans le store
-}
-
-const deleteTodo = () => {
-  // Supprimer la tâche du store
+  emit('update-todo', props.todo)
 }
 </script>
