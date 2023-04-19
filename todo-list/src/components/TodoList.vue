@@ -5,6 +5,7 @@
       <li v-for="todo in filteredTodos" :key="todo.id">
         <input type="checkbox" :checked="todo.completed" @change="toggleTodo(todo)" />
         {{ todo.title }} ({{ todo.estimatedHours }}h) - {{ todo.responsible.name }}
+        <button @click="editTodo(todo)">Modifier</button>
         <button @click="deleteTodo(todo.id)">Supprimer</button>
       </li>
     </ul>
@@ -24,17 +25,20 @@
       sélectionnées
     </label>
   </div>
+  <edit-todo-form :todo="editingTodo" @update-todo="updateTodo" @cancel-edit="cancelEdit" />
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useTodoStore } from '../store'
+import EditTodoForm from './EditTodoForm.vue'
 
 const store = useTodoStore()
 
 const todos = store.todos
 const responsables = store.responsables
 const filter = store.filter
+const editingTodo = store.editingTodo
 
 const filteredTodos = computed(() => {
   return store.filteredTodos
@@ -61,7 +65,20 @@ const deleteSelectedTodos = () => {
   })
 }
 
+const editTodo = (todo) => {
+  store.setEditingTodo(todo)
+}
+
 const setFilter = (filter) => {
   store.setFilter(filter)
+}
+
+const updateTodo = (updatedTodo) => {
+  store.updateTodo(updatedTodo)
+  store.setEditingTodo(null)
+}
+
+const cancelEdit = () => {
+  store.setEditingTodo(null)
 }
 </script>

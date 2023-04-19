@@ -27,7 +27,8 @@ export const useTodoStore = defineStore('todos', {
         name: 'David'
       }
     ] as Responsible[],
-    filter: 'all' as 'all' | 'selected' | 'unselected'
+    filter: 'all' as 'all' | 'selected' | 'unselected',
+    editingTodo: null as Todo | null
   }),
   getters: {
     filteredTodos() {
@@ -58,6 +59,9 @@ export const useTodoStore = defineStore('todos', {
     },
     setFilter(filter: 'all' | 'selected' | 'unselected') {
       this.filter = filter
+    },
+    setEditingTodo(todo: Todo | null) {
+      this.editingTodo = todo
     }
   }
 })
