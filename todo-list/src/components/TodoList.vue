@@ -3,7 +3,7 @@
   <div>
     <ul>
       <li v-for="todo in filteredTodos" :key="todo.id">
-        <input type="checkbox" v-model="todo.completed" @change="toggleTodo(todo)" />
+        <input type="checkbox" :checked="todo.completed" @change="toggleTodo(todo)" />
         {{ todo.title }} ({{ todo.estimatedHours }}h) - {{ todo.responsible.name }}
         <button @click="deleteTodo(todo.id)">Supprimer</button>
       </li>
