@@ -1,8 +1,9 @@
-// scr/router/index.ts
-
+// src/router/index.ts
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Home from '../components/Home.vue'
+import Home from '../views/Home.vue'
 import About from '../views/About.vue'
+
+console.log('Inside router/index.ts')
 
 const routes: RouteRecordRaw[] = [
   {
