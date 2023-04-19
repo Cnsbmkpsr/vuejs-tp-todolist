@@ -1,3 +1,4 @@
+<!-- src/components/TodoList.vue -->
 <template>
   <div>
     <h1>Ma liste de tâches</h1>
@@ -5,7 +6,12 @@
     <TodoCounter />
     <TodoFilter />
     <ul>
-      <TodoItem v-for="todo in filteredTodos" :key="todo.id" :todo="todo" />
+      <li v-for="todo in filteredTodos" :key="todo.id">
+        <input type="checkbox" v-model="todo.completed" />
+        <span
+          >{{ todo.title }} - {{ todo.estimatedHours }} heures - {{ todo.responsible.name }}</span
+        >
+      </li>
     </ul>
   </div>
 </template>
@@ -16,11 +22,23 @@ import { useStore } from '../store'
 import TodoForm from './TodoForm.vue'
 import TodoCounter from './TodoCounter.vue'
 import TodoFilter from './TodoFilter.vue'
-import TodoItem from './TodoItem.vue'
 
 const store = useStore()
 
 const filteredTodos = computed(() => {
-  // Appliquer le filtre sélectionné
+  switch (store.filter) {
+    case 'all':
+      return store.todos
+    case 'selected':
+      return store.todos.filter((todo) => todo.completed)
+    case 'unselected':
+      return store.todos.filter((todo) => !todo.completed)
+    default:
+      return store.todos
+  }
 })
+
+// Enregistrement des composants ici
+import { defineExpose } from 'vue'
+defineExpose({ components: { TodoForm, TodoCounter, TodoFilter } })
 </script>

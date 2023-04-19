@@ -1,8 +1,11 @@
+<!-- src/components/TodoForm.vue -->
 <template>
-  <form @submit.prevent="submitTodo">
-    <input v-model="title" type="text" placeholder="Titre de la tâche" />
-    <input v-model.number="estimatedHours" type="number" placeholder="Heures estimées" />
+  <form @submit.prevent="submitForm">
+    <input v-model="title" placeholder="Titre" />
+    <input v-model="estimatedHours" placeholder="Heures estimées" />
     <select v-model="selectedResponsible">
+      <option disabled value="">dsqdqs</option>
+      <option disabled value="">Responsable</option>
       <option v-for="responsible in responsables" :key="responsible.id" :value="responsible">
         {{ responsible.name }}
       </option>
@@ -16,11 +19,51 @@ import { ref } from 'vue'
 import { useStore } from '../store'
 
 const store = useStore()
-const title = ref('')
-const estimatedHours = ref(0)
-const selectedResponsible = ref(store.responsables[0])
 
-const submitTodo = () => {
-  // Vérifier les conditions de soumission, puis ajouter la tâche
+const title = ref('')
+const estimatedHours = ref('')
+const selectedResponsible = ref(null)
+
+const responsables = store.responsables
+
+const submitForm = () => {
+  // Validation du formulaire
+  if (
+    !title.value ||
+    !estimatedHours.value ||
+    !selectedResponsible.value ||
+    isNaN(+estimatedHours.value)
+  ) {
+    alert('Veuillez remplir correctement tous les champs')
+    return
+  }
+
+  // Vérification du nombre de tâches et des heures pour le responsable sélectionné
+  const tasksOfResponsible = store.todos.filter(
+    (todo) => todo.responsible.id === selectedResponsible.value.id
+  )
+  if (
+    tasksOfResponsible.length >= 3 ||
+    tasksOfResponsible.reduce((acc, curr) => acc + curr.estimatedHours, 0) + +estimatedHours.value >
+      10
+  ) {
+    alert("Le responsable a atteint la limite de tâches ou d'heures")
+    return
+  }
+
+  // Ajout de la tâche
+  const todo = {
+    id: Date.now().toString(),
+    title: title.value,
+    estimatedHours: +estimatedHours.value,
+    responsible: selectedResponsible.value,
+    completed: false
+  }
+  store.addTodo(todo)
+
+  // Réinitialisation du formulaire
+  title.value = ''
+  estimatedHours.value = ''
+  selectedResponsible.value = null
 }
 </script>
