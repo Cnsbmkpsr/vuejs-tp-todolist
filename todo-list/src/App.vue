@@ -1,18 +1,20 @@
 <!-- src/App.vue -->
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
-  <header>
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Todo List</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <div id="app">
+    <h1>Todo List</h1>
+    <TodoForm />
+    <TodoList />
+  </div>
 </template>
 
-<style scoped></style>
+<script>
+import TodoForm from './components/TodoForm.vue'
+import TodoList from './components/TodoList.vue'
+
+export default {
+  components: {
+    TodoForm,
+    TodoList
+  }
+}
+</script>

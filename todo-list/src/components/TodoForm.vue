@@ -20,15 +20,11 @@ const store = useTodoStore()
 
 const title = ref('')
 const estimatedHours = ref('')
-const selectedResponsible = ref(null)
+const selectedResponsible = ref(store.responsables[0])
 
 const responsables = store.responsables
 
 const submitForm = () => {
-  // Validation du formulaire
-  console.log(estimatedHours)
-  console.log(title)
-  console.log(selectedResponsible)
   if (
     !title.value ||
     !estimatedHours.value ||
@@ -39,7 +35,19 @@ const submitForm = () => {
     return
   }
 
-  // Ajout de la tâche
+  const tasksOfResponsible = store.todos.filter(
+    (todo) => todo.responsible.id === selectedResponsible.value.id
+  )
+
+  if (
+    tasksOfResponsible.length >= 3 ||
+    tasksOfResponsible.reduce((acc, curr) => acc + curr.estimatedHours, 0) + +estimatedHours.value >
+      10
+  ) {
+    alert("Le responsable a atteint la limite de tâches ou d'heures")
+    return
+  }
+
   const todo = {
     id: Date.now().toString(),
     title: title.value,
@@ -49,9 +57,8 @@ const submitForm = () => {
   }
   store.addTodo(todo)
 
-  // Réinitialisation du formulaire
   title.value = ''
   estimatedHours.value = ''
-  selectedResponsible.value = ''
+  selectedResponsible.value = store.responsables[0]
 }
 </script>

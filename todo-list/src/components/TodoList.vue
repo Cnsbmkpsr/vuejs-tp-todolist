@@ -1,43 +1,49 @@
 <!-- src/components/TodoList.vue -->
 <template>
   <div>
-    <h1>Ma liste de tâches</h1>
-    <TodoForm />
-    <TodoCounter />
-    <TodoFilter />
-    <ul>
-      <li v-for="todo in filteredTodos" :key="todo.id">
-        <input type="checkbox" v-model="todo.completed" />
-        <span
-          >{{ todo.title }} - {{ todo.estimatedHours }} heures - {{ todo.responsible.name }}</span
-        >
-      </li>
-    </ul>
+    <div v-for="todo in filteredTodos" :key="todo.id">
+      <input type="checkbox" v-model="todo.completed" @change="updateTodo(todo)" />
+      <span>{{ todo.title }} - {{ todo.estimatedHours }} heures - {{ todo.responsible.name }}</span>
+      <button @click="deleteTodo(todo.id)">Supprimer</button>
+    </div>
+    <button @click="deleteSelectedTodos">Supprimer les tâches sélectionnées</button>
+    <div>
+      Filtres :
+      <button @click="setFilter('all')">Tout afficher</button>
+      <button @click="setFilter('selected')">Afficher les sélectionnés</button>
+      <button @click="setFilter('unselected')">Afficher les non-sélectionnés</button>
+    </div>
+    <div>
+      Tâches totales : {{ todos.length }} | Tâches sélectionnées : {{ selectedTodos.length }}
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useTodoStore } from '../store'
-import TodoForm from './TodoForm.vue'
-import TodoCounter from './TodoCounter.vue'
-import TodoFilter from './TodoFilter.vue'
 
 const store = useTodoStore()
 
-const filteredTodos = computed(() => {
-  switch (store.filter) {
-    case 'all':
-      return store.todos
-    case 'selected':
-      return store.todos.filter((todo) => todo.completed)
-    case 'unselected':
-      return store.todos.filter((todo) => !todo.completed)
-    default:
-      return store.todos
-  }
-})
+const { todos, filteredTodos, selectedTodos } = store
 
-import { defineExpose } from 'vue'
-defineExpose({ components: { TodoForm, TodoCounter, TodoFilter } })
+const updateTodo = (todo) => {
+  store.updateTodo({
+    ...todo,
+    completed: !todo.completed
+  })
+}
+
+const deleteTodo = (todoId) => {
+  store.deleteTodo(todoId)
+}
+
+const deleteSelectedTodos = () => {
+  store.selectedTodos.forEach((todo) => {
+    store.deleteTodo(todo.id)
+  })
+}
+
+const setFilter = (filter) => {
+  store.setFilter(filter)
+}
 </script>
