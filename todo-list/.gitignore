@@ -1,0 +1,20 @@
+# Ignorer les fichiers temporaires et les fichiers de sauvegarde
+*.log
+*.swp
+*.bak
+*.tmp
+*~.nib
+*.lock
+*.vscode
+.DS_Store
+
+# Ignorer les dépendances
+/node_modules/
+
+# Ignorer les fichiers de build
+/dist/
+/build/
+
+# Ignorer les fichiers de configuration locaux
+.env.local
+.env.*.local
