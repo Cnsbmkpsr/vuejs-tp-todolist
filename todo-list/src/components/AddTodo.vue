@@ -3,9 +3,11 @@
   <form @submit.prevent="handleSubmit">
     <input type="text" v-model="title" placeholder="Titre" required />
     <input type="number" v-model.number="estimatedHours" placeholder="Heures estimées" required />
-    <select v-model="responsible" required>
-      <option disabled value="">Choisir un responsable</option>
-      <option v-for="resp in responsables" :key="resp.id" :value="resp">{{ resp.name }}</option>
+    <select v-model="selectedResponsible">
+      <option disabled value="">Responsable</option>
+      <option v-for="responsible in responsables" :key="responsible.id" :value="responsible">
+        {{ responsible.name }}
+      </option>
     </select>
     <button type="submit">Ajouter</button>
     <div v-if="error">{{ error }}</div>

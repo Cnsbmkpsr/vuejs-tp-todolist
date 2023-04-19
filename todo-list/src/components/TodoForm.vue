@@ -4,8 +4,6 @@
     <input v-model="title" placeholder="Titre" />
     <input v-model="estimatedHours" placeholder="Heures estimées" />
     <select v-model="selectedResponsible">
-      <option disabled value="">dsqdqs</option>
-      <option disabled value="">Responsable</option>
       <option v-for="responsible in responsables" :key="responsible.id" :value="responsible">
         {{ responsible.name }}
       </option>
@@ -28,12 +26,10 @@ const responsables = store.responsables
 
 const submitForm = () => {
   // Validation du formulaire
-  if (
-    !title.value ||
-    !estimatedHours.value ||
-    !selectedResponsible.value ||
-    isNaN(+estimatedHours.value)
-  ) {
+  console.log(estimatedHours)
+  console.log(title)
+  console.log(selectedResponsible)
+  if (!title.value || !estimatedHours.value || !selectedResponsible.value) {
     alert('Veuillez remplir correctement tous les champs')
     return
   }
@@ -64,6 +60,6 @@ const submitForm = () => {
   // Réinitialisation du formulaire
   title.value = ''
   estimatedHours.value = ''
-  selectedResponsible.value = null
+  selectedResponsible.value = ''
 }
 </script>

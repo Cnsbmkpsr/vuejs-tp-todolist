@@ -4,7 +4,12 @@ import { Todo, Responsible } from './types'
 
 export const state = reactive({
   todos: [] as Todo[],
-  responsables: [] as Responsible[],
+  responsables: [
+    {
+      id: '1',
+      name: 'Billy'
+    }
+  ] as Responsible[],
   filter: 'all'
 })
 
