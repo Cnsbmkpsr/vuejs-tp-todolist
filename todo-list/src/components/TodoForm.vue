@@ -39,11 +39,6 @@ const submitForm = () => {
     return
   }
 
-  // Vérification du nombre de tâches et des heures pour le responsable sélectionné
-  const tasksOfResponsible = store.todos.filter(
-    (todo) => todo.responsible.id === selectedResponsible.value.id
-  )
-
   // Ajout de la tâche
   const todo = {
     id: Date.now().toString(),
