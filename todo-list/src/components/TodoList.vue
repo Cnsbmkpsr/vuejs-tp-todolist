@@ -1,32 +1,50 @@
 <!-- src/components/TodoList.vue -->
 <template>
   <div>
-    <div v-for="todo in filteredTodos" :key="todo.id">
-      <input type="checkbox" v-model="todo.completed" @change="updateTodo(todo)" />
-      <span>{{ todo.title }} - {{ todo.estimatedHours }} heures - {{ todo.responsible.name }}</span>
-      <button @click="deleteTodo(todo.id)">Supprimer</button>
-    </div>
+    <ul>
+      <li v-for="todo in filteredTodos" :key="todo.id">
+        <input type="checkbox" v-model="todo.completed" @change="toggleTodo(todo)" />
+        {{ todo.title }} ({{ todo.estimatedHours }}h) - {{ todo.responsible.name }}
+        <button @click="deleteTodo(todo.id)">Supprimer</button>
+      </li>
+    </ul>
+    <div><strong>Nombre total de tâches :</strong> {{ todos.length }}</div>
+    <div><strong>Tâches sélectionnées :</strong> {{ selectedTodos.length }}</div>
     <button @click="deleteSelectedTodos">Supprimer les tâches sélectionnées</button>
-    <div>
-      Filtres :
-      <button @click="setFilter('all')">Tout afficher</button>
-      <button @click="setFilter('selected')">Afficher les sélectionnés</button>
-      <button @click="setFilter('unselected')">Afficher les non-sélectionnés</button>
-    </div>
-    <div>
-      Tâches totales : {{ todos.length }} | Tâches sélectionnées : {{ selectedTodos.length }}
-    </div>
+    <br />
+    <label>
+      <input type="radio" value="all" v-model="filter" @change="setFilter(filter)" /> Toutes
+    </label>
+    <label>
+      <input type="radio" value="selected" v-model="filter" @change="setFilter(filter)" />
+      Sélectionnées
+    </label>
+    <label>
+      <input type="radio" value="unselected" v-model="filter" @change="setFilter(filter)" /> Non
+      sélectionnées
+    </label>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useTodoStore } from '../store'
 
 const store = useTodoStore()
 
-const { todos, filteredTodos, selectedTodos } = store
+const todos = store.todos
+const responsables = store.responsables
+const filter = store.filter
 
-const updateTodo = (todo) => {
+const filteredTodos = computed(() => {
+  return store.filteredTodos
+})
+
+const selectedTodos = computed(() => {
+  return store.selectedTodos
+})
+
+const toggleTodo = (todo) => {
   store.updateTodo({
     ...todo,
     completed: !todo.completed
@@ -38,7 +56,7 @@ const deleteTodo = (todoId) => {
 }
 
 const deleteSelectedTodos = () => {
-  store.selectedTodos.forEach((todo) => {
+  selectedTodos.value.forEach((todo) => {
     store.deleteTodo(todo.id)
   })
 }

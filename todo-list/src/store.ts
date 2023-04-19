@@ -21,6 +21,10 @@ export const useTodoStore = defineStore('todos', {
       {
         id: '1',
         name: 'Billy'
+      },
+      {
+        id: '2',
+        name: 'David'
       }
     ] as Responsible[],
     filter: 'all' as 'all' | 'selected' | 'unselected'
