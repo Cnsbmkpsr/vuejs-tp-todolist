@@ -29,7 +29,12 @@ const submitForm = () => {
   console.log(estimatedHours)
   console.log(title)
   console.log(selectedResponsible)
-  if (!title.value || !estimatedHours.value || !selectedResponsible.value) {
+  if (
+    !title.value ||
+    !estimatedHours.value ||
+    !selectedResponsible.value ||
+    isNaN(+estimatedHours.value)
+  ) {
     alert('Veuillez remplir correctement tous les champs')
     return
   }
@@ -38,14 +43,6 @@ const submitForm = () => {
   const tasksOfResponsible = store.todos.filter(
     (todo) => todo.responsible.id === selectedResponsible.value.id
   )
-  if (
-    tasksOfResponsible.length >= 3 ||
-    tasksOfResponsible.reduce((acc, curr) => acc + curr.estimatedHours, 0) + +estimatedHours.value >
-      10
-  ) {
-    alert("Le responsable a atteint la limite de tâches ou d'heures")
-    return
-  }
 
   // Ajout de la tâche
   const todo = {
