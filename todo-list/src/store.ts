@@ -1,5 +1,6 @@
 // src/store.ts
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 interface Todo {
   id: string
@@ -28,7 +29,7 @@ export const useTodoStore = defineStore('todos', {
       }
     ] as Responsible[],
     filter: 'all' as 'all' | 'selected' | 'unselected',
-    editingTodo: null as Todo | null
+    editingTodo: ref(null) as Todo | null
   }),
   getters: {
     filteredTodos() {
@@ -48,7 +49,7 @@ export const useTodoStore = defineStore('todos', {
     addTodo(todo: Todo) {
       this.todos.push(todo)
     },
-    updateTodo(todo: Todo) {
+    editingTodo(todo: Todo) {
       const index = this.todos.findIndex((t) => t.id === todo.id)
       if (index !== -1) {
         this.todos[index] = todo
@@ -61,6 +62,7 @@ export const useTodoStore = defineStore('todos', {
       this.filter = filter
     },
     setEditingTodo(todo: Todo | null) {
+      console.log('edit todo')
       this.editingTodo = todo
     }
   }

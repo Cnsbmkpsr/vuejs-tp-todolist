@@ -25,11 +25,11 @@
       sélectionnées
     </label>
   </div>
-  <edit-todo-form :todo="editingTodo" @update-todo="updateTodo" @cancel-edit="cancelEdit" />
+  <edit-todo-form @submit-form="updateTodo" @cancel-edit="cancelEdit" />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useTodoStore } from '../store'
 import EditTodoForm from './EditTodoForm.vue'
 
@@ -38,7 +38,11 @@ const store = useTodoStore()
 const todos = store.todos
 const responsables = store.responsables
 const filter = store.filter
-const editingTodo = store.editingTodo
+const editingTodo = ref(null)
+
+watchEffect(() => {
+  editingTodo.value = store.editingTodo.value
+})
 
 const filteredTodos = computed(() => {
   return store.filteredTodos
@@ -66,7 +70,7 @@ const deleteSelectedTodos = () => {
 }
 
 const editTodo = (todo) => {
-  store.setEditingTodo(todo)
+  store.setEditingTodo(ref(todo))
 }
 
 const setFilter = (filter) => {
